@@ -17,7 +17,10 @@ type State = {
 //editedTask,updateEditedTask,resetEditedTaskが呼び出された時にそれぞれ何をするのかを記載
 const useStore = create<State>((set) => ({
   editedTask: { id: 0, title: '' },
-  updateEditedTask: (payload) => set({ editedTask: payload }),
+  updateEditedTask: (payload) =>
+    set({
+      editedTask: payload,
+    }),
   resetEditedTask: () => set({ editedTask: { id: 0, title: '' } }),
 }))
 

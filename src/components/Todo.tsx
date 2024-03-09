@@ -18,7 +18,6 @@ export const Todo = () => {
   const { data, isLoading } = useQueryTasks()
   const { createTaskMutation, updateTaskMutation } = useMutateTask()
   const { logoutMutation } = useMutateAuth()
-
   const submitTaskHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (editedTask.id === 0)
@@ -29,7 +28,6 @@ export const Todo = () => {
       updateTaskMutation.mutate(editedTask)
     }
   }
-
   const logout = async () => {
     await logoutMutation.mutateAsync()
     //ログアウト後にキャッシュを削除

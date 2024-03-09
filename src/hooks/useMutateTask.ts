@@ -75,6 +75,14 @@ export const useMutateTask = () => {
             previousTasks.filter((task) => task.id !== variables)
           )
         }
+        resetEditedTask()
+      },
+      onError: (err: any) => {
+        if (err.response.data.message) {
+          switchErrorHandling(err.response.data.message)
+        } else {
+          switchErrorHandling(err.response.data)
+        }
       },
     }
   )

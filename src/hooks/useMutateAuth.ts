@@ -1,15 +1,14 @@
-import { useNavigate } from 'react-router'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 import useStore from '../store'
 import { Credential } from '../types'
-import { useError } from './useError'
-import axios from 'axios'
+import { useError } from '../hooks/useError'
 
 export const useMutateAuth = () => {
   const navigate = useNavigate()
   const resetEditedTask = useStore((state) => state.resetEditedTask)
   const { switchErrorHandling } = useError()
-
   const loginMutation = useMutation(
     async (user: Credential) =>
       //第二引数のuserの中にemailとpasswordを送っている
@@ -29,7 +28,6 @@ export const useMutateAuth = () => {
       },
     }
   )
-
   const registerMutation = useMutation(
     async (user: Credential) =>
       await axios.post(`${process.env.REACT_APP_API_URL}/signup`, user),
