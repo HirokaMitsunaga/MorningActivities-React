@@ -25,7 +25,7 @@ export const useQueryTasks = (selectedDate: string) => {
   }
 
   return useQuery<Task[], Error>({
-    queryKey: ['tasks', selectedDate],
+    queryKey: ['tasks'],
     queryFn: getTasks,
     staleTime: Infinity,
     onError: (err: any) => {
