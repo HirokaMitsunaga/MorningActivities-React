@@ -1,4 +1,4 @@
-import { FormEvent } from 'react'
+import { FormEvent, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import {
   ArrowRightOnRectangleIcon,
@@ -15,8 +15,12 @@ export const Todo = () => {
   const { editedTask } = useStore()
   const updateTask = useStore((state) => state.updateEditedTask)
   //isLoadingは何だ？
-  const { data, isLoading } = useQueryTasks()
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().split('T')[0]
+  )
+  const { data, isLoading } = useQueryTasks(selectedDate)
   const { createTaskMutation, updateTaskMutation } = useMutateTask()
+
   const { logoutMutation } = useMutateAuth()
   const submitTaskHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -44,6 +48,11 @@ export const Todo = () => {
       <ArrowRightOnRectangleIcon
         onClick={logout}
         className="h-6 w-6 my-6 text-blue-500 cursor-pointer"
+      />
+      <input
+        type="date"
+        value={selectedDate}
+        onChange={(e) => setSelectedDate(e.target.value)}
       />
       <form onSubmit={submitTaskHandler}>
         <input
