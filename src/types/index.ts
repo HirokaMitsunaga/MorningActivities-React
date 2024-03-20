@@ -3,6 +3,8 @@ export type Task = {
   title: string
   created_at: Date
   updated_at: Date
+  scheduled_minutes: number
+  actual_minutes: number
 }
 export type CsrfToken = {
   csrf_token: string

@@ -1,4 +1,4 @@
-import { FormEvent } from 'react'
+import { FormEvent, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import {
   ArrowRightOnRectangleIcon,
@@ -15,15 +15,17 @@ export const Todo = () => {
   const { editedTask } = useStore()
   const updateTask = useStore((state) => state.updateEditedTask)
   //isLoadingは何だ？
-  const { data, isLoading } = useQueryTasks()
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().split('T')[0]
+  )
+  const { data, isLoading } = useQueryTasks(selectedDate)
   const { createTaskMutation, updateTaskMutation } = useMutateTask()
+
   const { logoutMutation } = useMutateAuth()
+  //editedTask.idが0の時、新規にたtaskを作成し、それ以外はもともとidをもっていると判断して更新をする
   const submitTaskHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (editedTask.id === 0)
-      createTaskMutation.mutate({
-        title: editedTask.title,
-      })
+    if (editedTask.id === 0) createTaskMutation.mutate(editedTask)
     else {
       updateTaskMutation.mutate(editedTask)
     }
@@ -45,6 +47,11 @@ export const Todo = () => {
         onClick={logout}
         className="h-6 w-6 my-6 text-blue-500 cursor-pointer"
       />
+      <input
+        type="date"
+        value={selectedDate}
+        onChange={(e) => setSelectedDate(e.target.value)}
+      />
       <form onSubmit={submitTaskHandler}>
         <input
           className="mb-3 mr-3 px-3 py-2 border border-gray-300"
@@ -53,6 +60,34 @@ export const Todo = () => {
           onChange={(e) => updateTask({ ...editedTask, title: e.target.value })}
           value={editedTask.title || ''}
         />
+        <div>
+          <label htmlFor="scheduled_minutes">Scheduled Minutes:</label>
+          <input
+            id="scheduled_minutes"
+            type="number"
+            value={editedTask.scheduled_minutes}
+            onChange={(e) =>
+              updateTask({
+                ...editedTask,
+                scheduled_minutes: parseInt(e.target.value),
+              })
+            }
+          />
+        </div>
+        <div>
+          <label htmlFor="actual_minutes">Actual Minutes:</label>
+          <input
+            id="actual_minutes"
+            type="number"
+            value={editedTask.actual_minutes}
+            onChange={(e) =>
+              updateTask({
+                ...editedTask,
+                actual_minutes: parseInt(e.target.value),
+              })
+            }
+          />
+        </div>
         <button
           className="disabled:opacity-40 mx-3 py-2 px-3 text-white bg-indigo-600 rounded"
           disabled={!editedTask.title}
@@ -65,7 +100,13 @@ export const Todo = () => {
       ) : (
         <ul className="my-5">
           {data?.map((task) => (
-            <TaskItem key={task.id} id={task.id} title={task.title} />
+            <TaskItem
+              key={task.id}
+              id={task.id}
+              title={task.title}
+              scheduled_minutes={task.scheduled_minutes}
+              actual_minutes={task.actual_minutes}
+            />
           ))}
         </ul>
       )}

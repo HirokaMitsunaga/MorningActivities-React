@@ -36,6 +36,8 @@ export const useMutateTask = () => {
       //データとしてtaskのタイトルを渡す
       axios.put<Task>(`${process.env.REACT_APP_API_URL}/tasks/${task.id}`, {
         title: task.title,
+        scheduled_minutes: task.scheduled_minutes,
+        actual_minutes: task.actual_minutes,
       }),
     {
       onSuccess: (res, variables) => {

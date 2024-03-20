@@ -8,12 +8,16 @@ import { useMutateTask } from '../hooks/useMutateTask'
 const TaskItemMemo: FC<Omit<Task, 'created_at' | 'updated_at'>> = ({
   id,
   title,
+  scheduled_minutes,
+  actual_minutes,
 }) => {
   const updateTask = useStore((state) => state.updateEditedTask)
   const { deleteTaskMutation } = useMutateTask()
   return (
     <li className="my-3">
-      <span className="font-bold">{title}</span>
+      <span className="font-bold">
+        {title}({scheduled_minutes}分/{actual_minutes}分)
+      </span>
       <div className="flex float-right ml-20">
         <PencilIcon
           className="h-5 w-5 mx-1 text-blue-500 cursor-pointer"
@@ -23,6 +27,8 @@ const TaskItemMemo: FC<Omit<Task, 'created_at' | 'updated_at'>> = ({
             updateTask({
               id: id,
               title: title,
+              scheduled_minutes: scheduled_minutes,
+              actual_minutes: actual_minutes,
             })
           }}
         />
