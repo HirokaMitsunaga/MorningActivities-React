@@ -10,15 +10,10 @@ export const useQueryTasks = (selectedDate: string) => {
       `${process.env.REACT_APP_API_URL}/tasks`,
       { withCredentials: true }
     )
-    // 本日の日付を取得
-    const selectedDateObj = new Date(selectedDate)
-    selectedDateObj.setHours(0, 0, 0, 0) // 時間をリセット
-
     // タスクのcreated_atと選択された日付が一致するものだけをフィルタリング
     const filteredTasks = data.filter((task) => {
-      const taskDate = new Date(task.created_at)
-      taskDate.setHours(0, 0, 0, 0) // 時間をリセット
-      return taskDate.getTime() === selectedDateObj.getTime()
+      const taskDate = new Date(task.created_at).toISOString().split('T')[0]
+      return taskDate === selectedDate
     })
 
     return filteredTasks
