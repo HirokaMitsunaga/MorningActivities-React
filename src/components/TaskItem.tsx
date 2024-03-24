@@ -12,7 +12,8 @@ const TaskItemMemo: FC<Omit<Task, 'created_at' | 'updated_at'>> = ({
   actual_minutes,
 }) => {
   const updateTask = useStore((state) => state.updateEditedTask)
-  const { deleteTaskMutation } = useMutateTask()
+  const selectedDate = useStore((state) => state.selectedDate)
+  const { deleteTaskMutation } = useMutateTask(selectedDate)
   return (
     <li className="my-3">
       <span className="font-bold">

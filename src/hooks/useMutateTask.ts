@@ -4,7 +4,7 @@ import { Task } from '../types'
 import useStore from '../store'
 import { useError } from '../hooks/useError'
 
-export const useMutateTask = () => {
+export const useMutateTask = (selectedDate: string) => {
   const queryClient = useQueryClient()
   const { switchErrorHandling } = useError()
   const resetEditedTask = useStore((state) => state.resetEditedTask)
@@ -14,10 +14,16 @@ export const useMutateTask = () => {
       axios.post<Task>(`${process.env.REACT_APP_API_URL}/tasks`, task),
     {
       onSuccess: (res) => {
-        const previousTasks = queryClient.getQueryData<Task[]>(['tasks'])
+        const previousTasks = queryClient.getQueryData<Task[]>([
+          'tasks',
+          selectedDate,
+        ])
         if (previousTasks) {
           //既存のキャッシュが存在する場合、既存の配列に新しく追加したtaskを配列の末尾に追加する
-          queryClient.setQueryData(['tasks'], [...previousTasks, res.data])
+          queryClient.setQueryData(
+            ['tasks', selectedDate],
+            [...previousTasks, res.data]
+          )
         }
         //zustandのstateをクリアする
         resetEditedTask()
@@ -41,10 +47,13 @@ export const useMutateTask = () => {
       }),
     {
       onSuccess: (res, variables) => {
-        const previousTasks = queryClient.getQueryData<Task[]>(['tasks'])
+        const previousTasks = queryClient.getQueryData<Task[]>([
+          'tasks',
+          selectedDate,
+        ])
         if (previousTasks) {
           queryClient.setQueryData<Task[]>(
-            ['tasks'],
+            ['tasks', selectedDate],
             previousTasks.map((task) =>
               //previousTasksの中でupdate対象のキャッシュのtask.idをupdateしたもので置き換える
               //対象外のものはそのままにする
@@ -69,10 +78,13 @@ export const useMutateTask = () => {
       axios.delete(`${process.env.REACT_APP_API_URL}/tasks/${id}`),
     {
       onSuccess: (_, variables) => {
-        const previousTasks = queryClient.getQueryData<Task[]>(['tasks'])
+        const previousTasks = queryClient.getQueryData<Task[]>([
+          'tasks',
+          selectedDate,
+        ])
         if (previousTasks) {
           queryClient.setQueryData<Task[]>(
-            ['tasks'],
+            ['tasks', selectedDate],
             //キャッシュの中で削除したtask.idと一致しないものを削除して新しく配列を作りなおす
             previousTasks.filter((task) => task.id !== variables)
           )

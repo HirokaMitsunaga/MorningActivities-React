@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import {
   ArrowRightOnRectangleIcon,
@@ -12,14 +12,10 @@ import { TaskItem } from './TaskItem'
 
 export const Todo = () => {
   const queryClient = useQueryClient()
-  const { editedTask } = useStore()
-  const updateTask = useStore((state) => state.updateEditedTask)
-  //isLoadingは何だ？
-  const [selectedDate, setSelectedDate] = useState(
-    new Date().toISOString().split('T')[0]
-  )
+  const { editedTask, updateEditedTask, selectedDate, setSelectedDate } =
+    useStore()
   const { data, isLoading } = useQueryTasks(selectedDate)
-  const { createTaskMutation, updateTaskMutation } = useMutateTask()
+  const { createTaskMutation, updateTaskMutation } = useMutateTask(selectedDate)
 
   const { logoutMutation } = useMutateAuth()
   //editedTask.idが0の時、新規にたtaskを作成し、それ以外はもともとidをもっていると判断して更新をする
@@ -35,6 +31,14 @@ export const Todo = () => {
     //ログアウト後にキャッシュを削除
     queryClient.removeQueries(['tasks'])
   }
+
+  useEffect(() => {
+    const storedDate = localStorage.getItem('selectedDate')
+    if (storedDate) {
+      setSelectedDate(storedDate)
+    }
+  }, [setSelectedDate])
+
   return (
     <div className="flex justify-center items-center flex-col min-h-screen text-gray-600 font-mono">
       <div className="flex items-center my-3">
@@ -47,17 +51,25 @@ export const Todo = () => {
         onClick={logout}
         className="h-6 w-6 my-6 text-blue-500 cursor-pointer"
       />
+
       <input
         type="date"
         value={selectedDate}
-        onChange={(e) => setSelectedDate(e.target.value)}
+        onChange={(e) => {
+          const newDate = e.target.value
+          setSelectedDate(newDate)
+          localStorage.setItem('selectedDate', newDate) // ローカルストレージに保存
+          console.log({ selectedDate: newDate })
+        }}
       />
       <form onSubmit={submitTaskHandler}>
         <input
           className="mb-3 mr-3 px-3 py-2 border border-gray-300"
           placeholder="title ?"
           type="text"
-          onChange={(e) => updateTask({ ...editedTask, title: e.target.value })}
+          onChange={(e) =>
+            updateEditedTask({ ...editedTask, title: e.target.value })
+          }
           value={editedTask.title || ''}
         />
         <div>
@@ -67,7 +79,7 @@ export const Todo = () => {
             type="number"
             value={editedTask.scheduled_minutes}
             onChange={(e) =>
-              updateTask({
+              updateEditedTask({
                 ...editedTask,
                 scheduled_minutes: parseInt(e.target.value),
               })
@@ -81,7 +93,7 @@ export const Todo = () => {
             type="number"
             value={editedTask.actual_minutes}
             onChange={(e) =>
-              updateTask({
+              updateEditedTask({
                 ...editedTask,
                 actual_minutes: parseInt(e.target.value),
               })
