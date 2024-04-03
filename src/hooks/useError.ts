@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useNavigate } from 'react-router'
 import { CsrfToken } from '../types'
-import useStore from '../store'
+import useStore from '../store/taskStore'
 
 export const useError = () => {
   const navigate = useNavigate()

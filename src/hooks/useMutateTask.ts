@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { Task } from '../types'
-import useStore from '../store'
+import useStore from '../store/taskStore'
 import { useError } from '../hooks/useError'
 
 export const useMutateTask = (selectedDate: string) => {
