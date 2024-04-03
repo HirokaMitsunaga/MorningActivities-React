@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
-import useStore from '../store'
+import useStore from '../store/taskStore'
 import { Credential } from '../types'
 import { useError } from '../hooks/useError'
 

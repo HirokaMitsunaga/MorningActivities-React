@@ -13,3 +13,12 @@ export type Credential = {
   email: string
   password: string
 }
+
+export type Timeline = {
+  id: number
+  sentence: string
+  created_at: Date
+  updated_at: Date
+  user_id: number
+  email: string
+}
