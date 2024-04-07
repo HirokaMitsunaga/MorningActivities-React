@@ -19,7 +19,7 @@ type State = {
 }
 
 //editedTask,updateEditedTask,resetEditedTaskが呼び出された時にそれぞれ何をするのかを記載
-const useStore = create<State>((set) => ({
+const useTaskStore = create<State>((set) => ({
   editedTask: { id: 0, title: '', scheduled_minutes: 0, actual_minutes: 0 },
   updateEditedTask: (payload) =>
     set({
@@ -33,4 +33,4 @@ const useStore = create<State>((set) => ({
   setSelectedDate: (date) => set({ selectedDate: date }),
 }))
 
-export default useStore
+export default useTaskStore

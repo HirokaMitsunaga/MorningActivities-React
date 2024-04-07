@@ -1,13 +1,13 @@
 import axios from 'axios'
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { Task } from '../types'
-import useStore from '../store/taskStore'
+import useTaskStore from '../store/taskStore'
 import { useError } from '../hooks/useError'
 
 export const useMutateTask = (selectedDate: string) => {
   const queryClient = useQueryClient()
   const { switchErrorHandling } = useError()
-  const resetEditedTask = useStore((state) => state.resetEditedTask)
+  const resetEditedTask = useTaskStore((state) => state.resetEditedTask)
 
   const createTaskMutation = useMutation(
     (task: Omit<Task, 'id' | 'created_at' | 'updated_at'>) =>

@@ -4,7 +4,7 @@ import {
   ArrowRightOnRectangleIcon,
   ShieldCheckIcon,
 } from '@heroicons/react/24/solid'
-import useStore from '../store/taskStore'
+import useTaskStore from '../store/taskStore'
 import { useQueryTasks } from '../hooks/useQueryTasks'
 import { useMutateTask } from '../hooks/useMutateTask'
 import { useMutateAuth } from '../hooks/useMutateAuth'
@@ -13,7 +13,7 @@ import { TaskItem } from './TaskItem'
 export const Todo = () => {
   const queryClient = useQueryClient()
   const { editedTask, updateEditedTask, selectedDate, setSelectedDate } =
-    useStore()
+    useTaskStore()
   const { data, isLoading } = useQueryTasks(selectedDate)
   const { createTaskMutation, updateTaskMutation } = useMutateTask(selectedDate)
 
