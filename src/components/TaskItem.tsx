@@ -1,6 +1,6 @@
 import { FC, memo } from 'react'
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid'
-import useStore from '../store/taskStore'
+import useTaskStore from '../store/taskStore'
 import { Task } from '../types'
 import { useMutateTask } from '../hooks/useMutateTask'
 
@@ -11,8 +11,8 @@ const TaskItemMemo: FC<Omit<Task, 'created_at' | 'updated_at'>> = ({
   scheduled_minutes,
   actual_minutes,
 }) => {
-  const updateTask = useStore((state) => state.updateEditedTask)
-  const selectedDate = useStore((state) => state.selectedDate)
+  const updateTask = useTaskStore((state) => state.updateEditedTask)
+  const selectedDate = useTaskStore((state) => state.selectedDate)
   const { deleteTaskMutation } = useMutateTask(selectedDate)
   return (
     <li className="my-3">

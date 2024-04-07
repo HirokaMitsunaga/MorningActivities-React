@@ -14,7 +14,7 @@ type State = {
   resetEditedTimeline: () => void
 }
 
-const useStore = create<State>((set) => ({
+const useTimelineStore = create<State>((set) => ({
   editedTimeline: { id: 0, sentence: '' },
   updateEditedTimeline: (payload) =>
     set({
@@ -26,4 +26,4 @@ const useStore = create<State>((set) => ({
     }),
 }))
 
-export default useStore
+export default useTimelineStore
