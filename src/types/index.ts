@@ -17,6 +17,8 @@ export type Credential = {
 export type Timeline = {
   id: number
   sentence: string
+  comment_count: number
+  like_count: number
   created_at: Date
   updated_at: Date
   user_id: number
