@@ -14,7 +14,7 @@ const TimelineItemMemo: FC<
   Omit<Timeline, 'created_at' | 'updated_at' | 'user_id'>
 > = ({ id, sentence, email, comment_count, like_count }) => {
   const updateTimeline = useTimelineStore((state) => state.updateEditedTimeline)
-  const { deleteTimelineMutation, increaseLikeMutation } = useMutateTimeline()
+  const { deleteTimelineMutation, toggleLikeMutation } = useMutateTimeline()
   return (
     <li className="my-3 p-4 shadow-lg rounded-lg flex items-center bg-white">
       <span className="font-bold mr-4">{sentence}</span>
@@ -32,7 +32,7 @@ const TimelineItemMemo: FC<
         <HeartIcon
           className="h-5 w-5 mr-1"
           onClick={() => {
-            increaseLikeMutation.mutate(id)
+            toggleLikeMutation.mutate(id)
           }}
         />
         <span className="font-bold">{like_count}</span>

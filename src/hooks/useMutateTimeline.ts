@@ -134,16 +134,6 @@ export const useMutateTimeline = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(['timelines'])
       },
-      // onSuccess: (_, id) => {
-      //   queryClient.setQueryData<Timeline[]>(['timelines'], (oldData) => {
-      //     return oldData?.map((timeline) => {
-      //       if (timeline.id === id) {
-      //         return { ...timeline, like_count: timeline.like_count + 1 }
-      //       }
-      //       return timeline
-      //     })
-      //   })
-      // },
       onError: (err: any) => {
         if (err.response.data.message) {
           switchErrorHandling(err.response.data.message)
@@ -153,10 +143,23 @@ export const useMutateTimeline = () => {
       },
     }
   )
+  const toggleLikeMutation = useMutation(
+    (id: number) =>
+      axios.post(`${process.env.REACT_APP_API_URL}/likes/toggle`, {
+        target_id: id,
+        target_type: 'timeline',
+      }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['timelines'])
+      },
+    }
+  )
   return {
     createTimelineMutation,
     updateTimelineMutation,
     deleteTimelineMutation,
     increaseLikeMutation,
+    toggleLikeMutation,
   }
 }
