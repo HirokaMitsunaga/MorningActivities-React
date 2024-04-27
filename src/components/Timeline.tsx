@@ -45,6 +45,8 @@ export const Timeline = () => {
           <TimelineItem
             key={timeline.id}
             id={timeline.id}
+            comment_count={timeline.comment_count}
+            like_count={timeline.like_count}
             sentence={timeline.sentence}
             email={timeline.email}
           />

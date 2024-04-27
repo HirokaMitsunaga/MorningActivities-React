@@ -15,7 +15,13 @@ export const useMutateTimeline = () => {
     (
       timeline: Omit<
         Timeline,
-        'id' | 'created_at' | 'updated_at' | 'user_id' | 'email'
+        | 'id'
+        | 'created_at'
+        | 'updated_at'
+        | 'user_id'
+        | 'email'
+        | 'comment_count'
+        | 'like_count'
       >
     ) =>
       axios.post<Timeline>(
@@ -50,7 +56,12 @@ export const useMutateTimeline = () => {
     (
       timeline: Omit<
         Timeline,
-        'created_at' | 'updated_at' | 'user_id' | 'email'
+        | 'created_at'
+        | 'updated_at'
+        | 'user_id'
+        | 'email'
+        | 'comment_count'
+        | 'like_count'
       >
     ) =>
       //データとしてtimelineの文章を渡す
@@ -113,9 +124,42 @@ export const useMutateTimeline = () => {
       },
     }
   )
+  const increaseLikeMutation = useMutation(
+    (id: number) =>
+      axios.post(`${process.env.REACT_APP_API_URL}/likes`, {
+        target_id: id,
+        target_type: 'timeline',
+      }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['timelines'])
+      },
+      onError: (err: any) => {
+        if (err.response.data.message) {
+          switchErrorHandling(err.response.data.message)
+        } else {
+          switchErrorHandling(err.response.data)
+        }
+      },
+    }
+  )
+  const toggleLikeMutation = useMutation(
+    (id: number) =>
+      axios.post(`${process.env.REACT_APP_API_URL}/likes/toggle`, {
+        target_id: id,
+        target_type: 'timeline',
+      }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['timelines'])
+      },
+    }
+  )
   return {
     createTimelineMutation,
     updateTimelineMutation,
     deleteTimelineMutation,
+    increaseLikeMutation,
+    toggleLikeMutation,
   }
 }
