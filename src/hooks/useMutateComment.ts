@@ -12,7 +12,12 @@ export const useMutateComment = () => {
   )
 
   const createCommentMutation = useMutation(
-    (comment: Omit<Comment, 'created_at' | 'updated_at' | 'user_id'>) =>
+    (
+      comment: Omit<
+        Comment,
+        'created_at' | 'updated_at' | 'user_id' | 'like_count'
+      >
+    ) =>
       axios.post<Comment>(`${process.env.REACT_APP_API_URL}/comments`, comment),
     {
       onSuccess: (res) => {
@@ -39,7 +44,12 @@ export const useMutateComment = () => {
     }
   )
   const updateCommentMutation = useMutation(
-    (comment: Omit<Comment, 'created_at' | 'updated_at' | 'user_id'>) =>
+    (
+      comment: Omit<
+        Comment,
+        'created_at' | 'updated_at' | 'user_id' | 'like_count'
+      >
+    ) =>
       //データとしてcommentの文章を渡す
       axios.put<Comment>(
         `${process.env.REACT_APP_API_URL}/comments/${comment.id}`,
@@ -100,10 +110,31 @@ export const useMutateComment = () => {
       },
     }
   )
+  //ロクイン中のユーザのいいねが存在すれば、いいねを一つ減らす、いいねが存在しなければ、いいねを一つ増やす
+  const toggleLikeMutation = useMutation(
+    (id: number) =>
+      axios.post(`${process.env.REACT_APP_API_URL}/likes/toggle`, {
+        target_id: id,
+        target_type: 'comment',
+      }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['comments'])
+      },
+      onError: (err: any) => {
+        if (err.response.data.message) {
+          switchErrorHandling(err.response.data.message)
+        } else {
+          switchErrorHandling(err.response.data)
+        }
+      },
+    }
+  )
 
   return {
     createCommentMutation,
     updateCommentMutation,
     deleteCommentMutation,
+    toggleLikeMutation,
   }
 }
