@@ -30,6 +30,7 @@ export type Comment = {
   timeline_id: number
   user_id: number
   comment: string
+  like_count: number
   created_at: Date
   updated_at: Date
 }

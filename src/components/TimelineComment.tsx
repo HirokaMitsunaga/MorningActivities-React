@@ -66,6 +66,7 @@ export const TimelineComment = () => {
             id={comment.id}
             timeline_id={comment.timeline_id}
             comment={comment.comment}
+            like_count={comment.like_count}
             user_id={comment.user_id}
           />
         ))}

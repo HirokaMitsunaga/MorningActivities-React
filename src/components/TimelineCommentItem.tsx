@@ -1,10 +1,5 @@
 import { FC, memo } from 'react'
-import {
-  PencilIcon,
-  TrashIcon,
-  HeartIcon,
-  ChatBubbleOvalLeftIcon,
-} from '@heroicons/react/24/outline'
+import { PencilIcon, TrashIcon, HeartIcon } from '@heroicons/react/24/outline'
 import useCommentStore from '../store/commentStore'
 import { Comment } from '../types'
 import { useMutateComment } from '../hooks/useMutateComment'
@@ -12,22 +7,20 @@ import { useMutateComment } from '../hooks/useMutateComment'
 //タスク１個１個に対する処理(更新か削除)
 const TimelineCommentItemMemo: FC<
   Omit<Comment, 'created_at' | 'updated_at'>
-> = ({ id, timeline_id, comment, user_id }) => {
+> = ({ id, timeline_id, comment, user_id, like_count }) => {
   const updateComment = useCommentStore((state) => state.updateEditedComment)
-  const { deleteCommentMutation } = useMutateComment()
+  const { deleteCommentMutation, toggleLikeMutation } = useMutateComment()
   return (
     <li className="my-3 p-4 shadow-lg rounded-lg flex items-center bg-white">
       <span className="font-bold mr-4">{comment}</span>
       <div className="flex items-center mr-4">
-        <ChatBubbleOvalLeftIcon
+        <HeartIcon
           className="h-5 w-5 mr-1"
           onClick={() => {
-            alert(user_id)
+            toggleLikeMutation.mutate(id)
           }}
         />
-      </div>
-      <div className="flex items-center mr-4">
-        <HeartIcon className="h-5 w-5 mr-1" />
+        <span className="font-bold">{like_count}</span>
       </div>
       <div className="flex ml-auto">
         <PencilIcon

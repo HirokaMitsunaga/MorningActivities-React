@@ -124,25 +124,6 @@ export const useMutateTimeline = () => {
       },
     }
   )
-  const increaseLikeMutation = useMutation(
-    (id: number) =>
-      axios.post(`${process.env.REACT_APP_API_URL}/likes`, {
-        target_id: id,
-        target_type: 'timeline',
-      }),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(['timelines'])
-      },
-      onError: (err: any) => {
-        if (err.response.data.message) {
-          switchErrorHandling(err.response.data.message)
-        } else {
-          switchErrorHandling(err.response.data)
-        }
-      },
-    }
-  )
   const toggleLikeMutation = useMutation(
     (id: number) =>
       axios.post(`${process.env.REACT_APP_API_URL}/likes/toggle`, {
@@ -166,7 +147,6 @@ export const useMutateTimeline = () => {
     createTimelineMutation,
     updateTimelineMutation,
     deleteTimelineMutation,
-    increaseLikeMutation,
     toggleLikeMutation,
   }
 }
