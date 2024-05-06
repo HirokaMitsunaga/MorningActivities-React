@@ -153,6 +153,13 @@ export const useMutateTimeline = () => {
       onSuccess: () => {
         queryClient.invalidateQueries(['timelines'])
       },
+      onError: (err: any) => {
+        if (err.response.data.message) {
+          switchErrorHandling(err.response.data.message)
+        } else {
+          switchErrorHandling(err.response.data)
+        }
+      },
     }
   )
   return {

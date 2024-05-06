@@ -5,6 +5,7 @@ import { Todo } from './components/Todo'
 import axios from 'axios'
 import { CsrfToken } from './types'
 import { Timeline } from './components/Timeline'
+import { TimelineComment } from './components/TimelineComment'
 
 function App() {
   useEffect(() => {
@@ -25,6 +26,7 @@ function App() {
         <Route path="/" element={<Auth />} />
         <Route path="/todo" element={<Todo />} />
         <Route path="/timeline" element={<Timeline />} />
+        <Route path="/timeline/:timelineId" element={<TimelineComment />} />
       </Routes>
     </BrowserRouter>
   )

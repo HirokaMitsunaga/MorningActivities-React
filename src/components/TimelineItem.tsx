@@ -8,6 +8,7 @@ import {
 import useTimelineStore from '../store/timelineStore'
 import { Timeline } from '../types'
 import { useMutateTimeline } from '../hooks/useMutateTimeline'
+import { useNavigate } from 'react-router-dom'
 
 //タスク１個１個に対する処理(更新か削除)
 const TimelineItemMemo: FC<
@@ -15,8 +16,15 @@ const TimelineItemMemo: FC<
 > = ({ id, sentence, email, comment_count, like_count }) => {
   const updateTimeline = useTimelineStore((state) => state.updateEditedTimeline)
   const { deleteTimelineMutation, toggleLikeMutation } = useMutateTimeline()
+  const navigate = useNavigate()
+  const handleTimelineClick = () => {
+    navigate(`/timeline/${id}`)
+  }
   return (
-    <li className="my-3 p-4 shadow-lg rounded-lg flex items-center bg-white">
+    <li
+      className="my-3 p-4 shadow-lg rounded-lg flex items-center bg-white"
+      onClick={handleTimelineClick}
+    >
       <span className="font-bold mr-4">{sentence}</span>
       <span className="font-bold mr-4">{email}</span>
       <div className="flex items-center mr-4">
