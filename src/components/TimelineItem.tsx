@@ -30,7 +30,8 @@ const TimelineItemMemo: FC<
       <div className="flex items-center mr-4">
         <ChatBubbleOvalLeftIcon
           className="h-5 w-5 mr-1"
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation()
             alert(email)
           }}
         />
@@ -39,7 +40,8 @@ const TimelineItemMemo: FC<
       <div className="flex items-center mr-4">
         <HeartIcon
           className="h-5 w-5 mr-1"
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation()
             toggleLikeMutation.mutate(id)
           }}
         />
@@ -48,7 +50,8 @@ const TimelineItemMemo: FC<
       <div className="flex ml-auto">
         <PencilIcon
           className="h-5 w-5 mx-1 text-blue-500 cursor-pointer"
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation()
             //編集中のtaskをzustandを使ってグローバルなstateとして保持する
             //その後にupdateTaskMutationがどこかで実行されるのか？
             updateTimeline({
@@ -59,7 +62,8 @@ const TimelineItemMemo: FC<
         />
         <TrashIcon
           className="h-5 w-5 text-blue-500 cursor-pointer"
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation()
             deleteTimelineMutation.mutate(id)
           }}
         />
