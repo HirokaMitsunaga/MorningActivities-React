@@ -59,7 +59,7 @@ export const TimelineComment = () => {
           {editedComment.id === 0 ? 'Create' : 'Update'}
         </button>
       </form>
-      <ul className="my-5">
+      <div className="w-5/6 sm:ml-5 md:ml-50 lg:ml-64">
         {data?.map((comment) => (
           <TimelineCommentItem
             key={comment.id}
@@ -70,7 +70,7 @@ export const TimelineComment = () => {
             user_id={comment.user_id}
           />
         ))}
-      </ul>
+      </div>
     </div>
   )
 }

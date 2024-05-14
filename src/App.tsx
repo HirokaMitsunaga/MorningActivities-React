@@ -6,7 +6,8 @@ import axios from 'axios'
 import { CsrfToken } from './types'
 import { Timeline } from './components/Timeline'
 import { TimelineComment } from './components/TimelineComment'
-import { Sidebar } from './components/Sidebar'
+import { Profile } from './components/Profile'
+import { LayOut } from './components/LayOut/LayOut'
 
 function App() {
   useEffect(() => {
@@ -24,29 +25,44 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Auth />} />
+        <Route
+          path="/"
+          element={
+            <LayOut>
+              <Auth />
+            </LayOut>
+          }
+        />
         <Route
           path="/todo"
           element={
-            <Sidebar>
+            <LayOut>
               <Todo />
-            </Sidebar>
+            </LayOut>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <LayOut>
+              <Profile />
+            </LayOut>
           }
         />
         <Route
           path="/timeline"
           element={
-            <Sidebar>
+            <LayOut>
               <Timeline />
-            </Sidebar>
+            </LayOut>
           }
         />
         <Route
           path="/timeline/:timelineId"
           element={
-            <Sidebar>
+            <LayOut>
               <TimelineComment />
-            </Sidebar>
+            </LayOut>
           }
         />
       </Routes>

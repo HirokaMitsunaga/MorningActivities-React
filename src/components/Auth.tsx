@@ -74,6 +74,7 @@ export const Auth = () => {
         onClick={() => setIsLogin(!isLogin)}
         className="h-6 w-6 my-2 text-blue-500 cursor-pointer"
       />
+      {isLogin ? 'Create Account?' : 'Back to Login?'}
     </div>
   )
 }

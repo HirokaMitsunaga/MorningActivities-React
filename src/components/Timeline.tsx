@@ -40,18 +40,20 @@ export const Timeline = () => {
           {editedTimeline.id === 0 ? 'Create' : 'Update'}
         </button>
       </form>
-      <ul className="my-5">
-        {data?.map((timeline) => (
-          <TimelineItem
-            key={timeline.id}
-            id={timeline.id}
-            comment_count={timeline.comment_count}
-            like_count={timeline.like_count}
-            sentence={timeline.sentence}
-            email={timeline.email}
-          />
-        ))}
-      </ul>
+      <div className="w-5/6 sm:ml-5 md:ml-50 lg:ml-64">
+        <ul className="w-5/6">
+          {data?.map((timeline) => (
+            <TimelineItem
+              key={timeline.id}
+              id={timeline.id}
+              comment_count={timeline.comment_count}
+              like_count={timeline.like_count}
+              sentence={timeline.sentence}
+              email={timeline.email}
+            />
+          ))}
+        </ul>
+      </div>
     </div>
   )
 }

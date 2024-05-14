@@ -1,23 +1,19 @@
-import { FormEvent, useEffect } from 'react'
+import { FormEvent, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import {
-  ArrowRightOnRectangleIcon,
-  ShieldCheckIcon,
-} from '@heroicons/react/24/solid'
+import { CalendarIcon, PlusIcon } from '@heroicons/react/24/solid'
 import useTaskStore from '../store/taskStore'
 import { useQueryTasks } from '../hooks/useQueryTasks'
 import { useMutateTask } from '../hooks/useMutateTask'
-import { useMutateAuth } from '../hooks/useMutateAuth'
 import { TaskItem } from './TaskItem'
+import { TaskModal } from './TaskModal'
+import { CalendarModal } from './CalendarModal'
+// import { TaskItem } from './TaskItem'
 
 export const Todo = () => {
-  const queryClient = useQueryClient()
-  const { editedTask, updateEditedTask, selectedDate, setSelectedDate } =
-    useTaskStore()
+  const { editedTask, selectedDate, setSelectedDate } = useTaskStore()
   const { data, isLoading } = useQueryTasks(selectedDate)
   const { createTaskMutation, updateTaskMutation } = useMutateTask(selectedDate)
 
-  const { logoutMutation } = useMutateAuth()
   //editedTask.idが0の時、新規にたtaskを作成し、それ以外はもともとidをもっていると判断して更新をする
   const submitTaskHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -26,102 +22,59 @@ export const Todo = () => {
       updateTaskMutation.mutate(editedTask)
     }
   }
-  const logout = async () => {
-    await logoutMutation.mutateAsync()
-    //ログアウト後にキャッシュを削除
-    queryClient.removeQueries(['tasks'])
-  }
 
-  useEffect(() => {
-    const storedDate = localStorage.getItem('selectedDate')
-    if (storedDate) {
-      setSelectedDate(storedDate)
-    }
-  }, [setSelectedDate])
-
+  const [isTaskModalOpen, setTaskModalOpen] = useState(false)
+  const [isCalendarModalOpen, setCalendarModalOpen] = useState(false)
   return (
-    <div className="flex justify-center items-center flex-col min-h-screen text-gray-600 font-mono">
-      <div className="flex items-center my-3">
-        <ShieldCheckIcon className="h-8 w-8 mr-3 text-indigo-500 cursor-pointer" />
-        <span className="text-center text-3xl font-extrabold">
-          Task Manager
-        </span>
-      </div>
-      <ArrowRightOnRectangleIcon
-        onClick={logout}
-        className="h-6 w-6 my-6 text-blue-500 cursor-pointer"
-      />
-
-      <input
-        type="date"
-        value={selectedDate}
-        onChange={(e) => {
-          const newDate = e.target.value
-          setSelectedDate(newDate)
-          localStorage.setItem('selectedDate', newDate) // ローカルストレージに保存
-          console.log({ selectedDate: newDate })
-        }}
-      />
-      <form onSubmit={submitTaskHandler}>
-        <input
-          className="mb-3 mr-3 px-3 py-2 border border-gray-300"
-          placeholder="title ?"
-          type="text"
-          onChange={(e) =>
-            updateEditedTask({ ...editedTask, title: e.target.value })
-          }
-          value={editedTask.title || ''}
-        />
-        <div>
-          <label htmlFor="scheduled_minutes">Scheduled Minutes:</label>
-          <input
-            id="scheduled_minutes"
-            type="number"
-            value={editedTask.scheduled_minutes}
-            onChange={(e) =>
-              updateEditedTask({
-                ...editedTask,
-                scheduled_minutes: parseInt(e.target.value),
-              })
-            }
-          />
-        </div>
-        <div>
-          <label htmlFor="actual_minutes">Actual Minutes:</label>
-          <input
-            id="actual_minutes"
-            type="number"
-            value={editedTask.actual_minutes}
-            onChange={(e) =>
-              updateEditedTask({
-                ...editedTask,
-                actual_minutes: parseInt(e.target.value),
-              })
-            }
-          />
-        </div>
+    <>
+      <div className="flex justify-center items-center flex-col min-h-screen text-gray-600 font-mono">
         <button
-          className="disabled:opacity-40 mx-3 py-2 px-3 text-white bg-indigo-600 rounded"
-          disabled={!editedTask.title}
+          className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition-colors"
+          onClick={() => setTaskModalOpen(true)}
         >
-          {editedTask.id === 0 ? 'Create' : 'Update'}
+          <PlusIcon className="h-5 w-5 mr-2" />
+          タスクを追加
         </button>
-      </form>
-      {isLoading ? (
-        <p>Loading...</p>
-      ) : (
-        <ul className="my-5">
-          {data?.map((task) => (
-            <TaskItem
-              key={task.id}
-              id={task.id}
-              title={task.title}
-              scheduled_minutes={task.scheduled_minutes}
-              actual_minutes={task.actual_minutes}
-            />
-          ))}
-        </ul>
-      )}
-    </div>
+        <button
+          className="flex items-center mt-2 px-4 py-2 bg-gray-400 text-white rounded-lg shadow hover:bg-gray-600 transition-colors"
+          onClick={() => setCalendarModalOpen(true)}
+        >
+          <CalendarIcon className="h-5 w-5 mr-2" />
+          {selectedDate}
+        </button>
+        <TaskModal
+          isOpen={isTaskModalOpen}
+          onClose={() => setTaskModalOpen(false)}
+        />
+        <CalendarModal
+          isOpen={isCalendarModalOpen}
+          onRequestClose={() => setCalendarModalOpen(false)}
+        />
+
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : (
+          <>
+            <ul className="my-5">
+              {data?.map((task) => (
+                <TaskItem
+                  key={task.id}
+                  id={task.id}
+                  title={task.title}
+                  scheduled_minutes={task.scheduled_minutes}
+                  actual_minutes={task.actual_minutes}
+                />
+              ))}
+            </ul>
+          </>
+        )}
+        <div className="mt-4 p-3 bg-gray-100 rounded">
+          <h3 className="font-semibold text-gray-800">
+            今日の引用句:まじで危機感持った方がいい
+          </h3>
+        </div>
+        <div className="text-sm text-red-500">連続活動日数: 2日</div>
+      </div>
+    </>
   )
 }
