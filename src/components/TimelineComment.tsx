@@ -5,6 +5,8 @@ import useCommentStore from '../store/commentStore'
 import { useMutateComment } from '../hooks/useMutateComment'
 import { TimelineCommentItem } from './TimelineCommentItem'
 import { useQueryClient } from '@tanstack/react-query'
+import { useQueryTimelineById } from '../hooks/useQueryTimelineById'
+import { TimelineItem } from './TimelineItem'
 
 export const TimelineComment = () => {
   // クエリパラメータでtimelineIdを受け取る
@@ -20,11 +22,13 @@ export const TimelineComment = () => {
   //クエリパラメータから取得したタイムラインIDをグローバルなstateとして保存する
   editedComment.timeline_id = numericTimelineId
   const { data, isLoading } = useQueryComment(numericTimelineId)
+  const { data: timelineData, isLoading: isTimelineLoading } =
+    useQueryTimelineById(numericTimelineId)
   if (!timelineId) {
     return <div>タイムラインIDが指定されていません。</div>
   }
 
-  if (isLoading) {
+  if (isLoading || isTimelineLoading) {
     return <div>Loading...</div>
   }
 
@@ -59,6 +63,17 @@ export const TimelineComment = () => {
           {editedComment.id === 0 ? 'Create' : 'Update'}
         </button>
       </form>
+      <div className="w-5/6 sm:ml-5 md:ml-50 lg:ml-64">
+        <TimelineItem
+          key={timelineData?.id ?? 0}
+          id={timelineData?.id ?? 0}
+          comment_count={0}
+          like_count={timelineData?.like_count ?? 0}
+          sentence={timelineData?.sentence ?? ''}
+          email={timelineData?.email ?? ''}
+        />
+      </div>
+
       <div className="w-5/6 sm:ml-5 md:ml-50 lg:ml-64">
         {data?.map((comment) => (
           <TimelineCommentItem

@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom'
 //タスク１個１個に対する処理(更新か削除)
 const TimelineItemMemo: FC<
   Omit<Timeline, 'created_at' | 'updated_at' | 'user_id'>
-> = ({ id, sentence, email, comment_count, like_count }) => {
+> = ({ id, sentence, email, comment_count = 0, like_count }) => {
   const updateTimeline = useTimelineStore((state) => state.updateEditedTimeline)
   const { deleteTimelineMutation, toggleLikeMutation } = useMutateTimeline()
   const navigate = useNavigate()
@@ -35,19 +35,21 @@ const TimelineItemMemo: FC<
       </div>
       <div className="flex-1 font-bold text-gray-800 mb-4">{sentence}</div>
       <div className="flex items-center justify-between">
-        <div className="flex items-center">
-          <ChatBubbleOvalLeftIcon
-            className="h-5 w-5 mr-1 text-gray-500 hover:text-gray-700"
-            onClick={(e) => {
-              e.stopPropagation()
-              alert(email)
-            }}
-          />
-          <span className="font-bold text-gray-700">{comment_count}</span>
-        </div>
-        <div className="flex items-center">
+        {comment_count > 0 && (
+          <div className="flex items-center">
+            <ChatBubbleOvalLeftIcon
+              className="h-5 w-5 mr-1 text-gray-500 hover:text-gray-700"
+              onClick={(e) => {
+                e.stopPropagation()
+                alert(email)
+              }}
+            />
+            <span className="font-bold text-gray-700">{comment_count}</span>
+          </div>
+        )}
+        <div className="flex items-center justify-center w-full">
           <HeartIcon
-            className="h-5 w-5 mr-1 text-red-500 hover:text-red-700"
+            className="h-5 w-5 text-red-500 hover:text-red-700 cursor-pointer"
             onClick={(e) => {
               e.stopPropagation()
               toggleLikeMutation.mutate(id)

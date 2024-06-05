@@ -131,8 +131,10 @@ export const useMutateTimeline = () => {
         target_type: 'timeline',
       }),
     {
-      onSuccess: () => {
+      onSuccess: (_, variables) => {
         queryClient.invalidateQueries(['timelines'])
+        console.log(variables)
+        queryClient.invalidateQueries(['timeline', { id: variables }]) // Correctly access the id
       },
       onError: (err: any) => {
         if (err.response.data.message) {
