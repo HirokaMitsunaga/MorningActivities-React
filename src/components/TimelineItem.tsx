@@ -1,4 +1,4 @@
-import { FC, memo } from 'react'
+import { FC, memo, useState } from 'react'
 import {
   PencilIcon,
   TrashIcon,
@@ -9,6 +9,7 @@ import useTimelineStore from '../store/timelineStore'
 import { Timeline } from '../types'
 import { useMutateTimeline } from '../hooks/useMutateTimeline'
 import { useNavigate } from 'react-router-dom'
+import { TimelineModal } from './TimelineModal'
 
 //タスク１個１個に対する処理(更新か削除)
 const TimelineItemMemo: FC<
@@ -16,10 +17,17 @@ const TimelineItemMemo: FC<
 > = ({ id, sentence, email, comment_count = 0, like_count }) => {
   const updateTimeline = useTimelineStore((state) => state.updateEditedTimeline)
   const { deleteTimelineMutation, toggleLikeMutation } = useMutateTimeline()
+  const [isModalOpen, setModalOpen] = useState(false) // モーダルの状態を追加
   const navigate = useNavigate()
   const handleTimelineClick = () => {
     navigate(`/timeline/${id}`)
   }
+
+  const openModal = () => {
+    updateTimeline({ id, sentence })
+    setModalOpen(true)
+  }
+
   return (
     <li
       className="my-3 p-4 shadow-lg rounded-lg bg-white cursor-pointer hover:bg-gray-100 flex flex-col"
@@ -62,11 +70,12 @@ const TimelineItemMemo: FC<
             className="h-5 w-5 mx-1 text-blue-500 hover:text-blue-700 cursor-pointer"
             onClick={(e) => {
               e.stopPropagation()
-              updateTimeline({
-                id: id,
-                sentence: sentence,
-              })
+              openModal()
             }}
+          />
+          <TimelineModal
+            isOpen={isModalOpen}
+            onClose={() => setModalOpen(false)}
           />
           <TrashIcon
             className="h-5 w-5 text-blue-500 hover:text-blue-700 cursor-pointer"
