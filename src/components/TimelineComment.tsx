@@ -1,17 +1,18 @@
-import React, { useEffect, FormEvent } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useQueryComment } from '../hooks/useQueryComment'
 import { useParams } from 'react-router-dom'
 import useCommentStore from '../store/commentStore'
-import { useMutateComment } from '../hooks/useMutateComment'
 import { TimelineCommentItem } from './TimelineCommentItem'
 import { useQueryClient } from '@tanstack/react-query'
 import { useQueryTimelineById } from '../hooks/useQueryTimelineById'
 import { TimelineItem } from './TimelineItem'
+import { PlusIcon } from '@heroicons/react/24/solid'
+import { TimelineCommentModal } from './TimelineCommentModal'
 
 export const TimelineComment = () => {
   // クエリパラメータでtimelineIdを受け取る
-  const { editedComment, updateEditedComment } = useCommentStore()
-  const { createCommentMutation, updateCommentMutation } = useMutateComment()
+  const [isTimelineModalOpen, setTimelineModalOpen] = useState(false)
+  const { editedComment } = useCommentStore()
   const { timelineId } = useParams<{ timelineId?: string }>()
   const numericTimelineId = parseInt(timelineId!, 10)
   const queryClient = useQueryClient()
@@ -32,37 +33,19 @@ export const TimelineComment = () => {
     return <div>Loading...</div>
   }
 
-  const submitCommentHandler = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (editedComment.id === 0) {
-      createCommentMutation.mutate(editedComment)
-    } else {
-      updateCommentMutation.mutate(editedComment)
-    }
-  }
-
   return (
     <div className="flex justify-center items-center flex-col min-h-screen text-gray-600 font-mono">
-      <form onSubmit={submitCommentHandler}>
-        <input
-          className="mb-3 mr-3 px-3 py-2 border border-gray-300"
-          placeholder="comment ?"
-          type="text"
-          onChange={(e) =>
-            updateEditedComment({
-              ...editedComment,
-              comment: e.target.value,
-            })
-          }
-          value={editedComment.comment || ''}
-        />
-        <button
-          className="disabled:opacity-40 mx-3 py-2 px-3 text-white bg-indigo-600 rounded"
-          disabled={!editedComment.comment}
-        >
-          {editedComment.id === 0 ? 'Create' : 'Update'}
-        </button>
-      </form>
+      <button
+        className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition-colors"
+        onClick={() => setTimelineModalOpen(true)}
+      >
+        <PlusIcon className="h-5 w-5 mr-2" />
+        コメント
+      </button>
+      <TimelineCommentModal
+        isOpen={isTimelineModalOpen}
+        onClose={() => setTimelineModalOpen(false)}
+      />
       <div className="w-5/6 sm:ml-5 md:ml-50 lg:ml-64">
         <TimelineItem
           key={timelineData?.id ?? 0}

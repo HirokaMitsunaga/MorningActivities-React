@@ -1,8 +1,9 @@
-import { FC, memo } from 'react'
+import { FC, memo, useState } from 'react'
 import { PencilIcon, TrashIcon, HeartIcon } from '@heroicons/react/24/outline'
 import useCommentStore from '../store/commentStore'
 import { Comment } from '../types'
 import { useMutateComment } from '../hooks/useMutateComment'
+import { TimelineCommentModal } from './TimelineCommentModal'
 
 //タスク１個１個に対する処理(更新か削除)
 const TimelineCommentItemMemo: FC<
@@ -10,6 +11,13 @@ const TimelineCommentItemMemo: FC<
 > = ({ id, timeline_id, comment, user_id, like_count }) => {
   const updateComment = useCommentStore((state) => state.updateEditedComment)
   const { deleteCommentMutation, toggleLikeMutation } = useMutateComment()
+  const [isModalOpen, setModalOpen] = useState(false) // モーダルの状態を追加
+
+  const openModal = () => {
+    updateComment({ id, comment, timeline_id })
+    setModalOpen(true)
+  }
+
   return (
     <>
       <li className="my-3 p-4 shadow-lg rounded-lg bg-white cursor-pointer hover:bg-gray-100 flex flex-col">
@@ -36,13 +44,11 @@ const TimelineCommentItemMemo: FC<
           <div className="flex items-center">
             <PencilIcon
               className="h-5 w-5 mx-1 text-blue-500 hover:text-blue-700 cursor-pointer"
-              onClick={() => {
-                updateComment({
-                  id: id,
-                  comment: comment,
-                  timeline_id: timeline_id,
-                })
-              }}
+              onClick={openModal}
+            />
+            <TimelineCommentModal
+              isOpen={isModalOpen}
+              onClose={() => setModalOpen(false)}
             />
             <TrashIcon
               className="h-5 w-5 text-blue-500 hover:text-blue-700 cursor-pointer"

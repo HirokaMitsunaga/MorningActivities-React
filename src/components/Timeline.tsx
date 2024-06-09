@@ -1,45 +1,27 @@
-import { FormEvent } from 'react'
+import { useState } from 'react'
 // import { useQueryClient } from '@tanstack/react-query'
-import useTimelineStore from '../store/timelineStore'
+import { PlusIcon } from '@heroicons/react/24/solid'
 import { useQueryTimeline } from '../hooks/useQueryTimeline'
-import { useMutateTimeline } from '../hooks/useMutateTimeline'
 import { TimelineItem } from './TimelineItem'
+import { TimelineModal } from './TimelineModal'
 
 export const Timeline = () => {
-  // const queryClient = useQueryClient()
-  const { editedTimeline, updateEditedTimeline } = useTimelineStore()
+  const [isTimelineModalOpen, setTimelineModalOpen] = useState(false)
   const { data } = useQueryTimeline()
-  const { createTimelineMutation, updateTimelineMutation } = useMutateTimeline()
 
-  const submitTimelineHandler = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (editedTimeline.id === 0) createTimelineMutation.mutate(editedTimeline)
-    else {
-      updateTimelineMutation.mutate(editedTimeline)
-    }
-  }
   return (
     <div className="flex justify-center items-center flex-col min-h-screen text-gray-600 font-mono">
-      <form onSubmit={submitTimelineHandler}>
-        <input
-          className="mb-3 mr-3 px-3 py-2 border border-gray-300"
-          placeholder="sentence ?"
-          type="text"
-          onChange={(e) =>
-            updateEditedTimeline({
-              ...editedTimeline,
-              sentence: e.target.value,
-            })
-          }
-          value={editedTimeline.sentence || ''}
-        />
-        <button
-          className="disabled:opacity-40 mx-3 py-2 px-3 text-white bg-indigo-600 rounded"
-          disabled={!editedTimeline.sentence}
-        >
-          {editedTimeline.id === 0 ? 'Create' : 'Update'}
-        </button>
-      </form>
+      <button
+        className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition-colors"
+        onClick={() => setTimelineModalOpen(true)}
+      >
+        <PlusIcon className="h-5 w-5 mr-2" />
+        投稿
+      </button>
+      <TimelineModal
+        isOpen={isTimelineModalOpen}
+        onClose={() => setTimelineModalOpen(false)}
+      />
       <div className="w-5/6 sm:ml-5 md:ml-50 lg:ml-64">
         <ul className="w-5/6">
           {data?.map((timeline) => (

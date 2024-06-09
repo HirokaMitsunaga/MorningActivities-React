@@ -14,12 +14,11 @@ const TaskItemMemo: FC<Omit<Task, 'created_at' | 'updated_at'>> = ({
 }) => {
   const updateTask = useTaskStore((state) => state.updateEditedTask)
   const selectedDate = useTaskStore((state) => state.selectedDate)
-  const { deleteTaskMutation, updateTaskMutation } = useMutateTask(selectedDate)
+  const { deleteTaskMutation } = useMutateTask(selectedDate)
   const [isModalOpen, setModalOpen] = useState(false) // モーダルの状態を追加
 
   const openModal = () => {
     updateTask({ id, title, scheduled_minutes, actual_minutes })
-    console.log(title)
     setModalOpen(true)
   }
   return (

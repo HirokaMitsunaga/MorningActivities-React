@@ -1,7 +1,6 @@
 import React, { FormEvent } from 'react'
 import { useMutateTask } from '../hooks/useMutateTask'
 import useTaskStore from '../store/taskStore'
-import { on } from 'events'
 
 export const TaskModal = ({
   isOpen,
