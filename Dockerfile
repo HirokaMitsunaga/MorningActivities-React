@@ -5,6 +5,7 @@ COPY package.json ./
 RUN yarn install --frozen-lockfile
 COPY . .
 RUN yarn build
+COPY .env ./
 
 # 2つ目のビルドステージ
 FROM node:20.11.0-alpine
