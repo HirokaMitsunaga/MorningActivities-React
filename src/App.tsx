@@ -10,17 +10,17 @@ import { Profile } from './components/Profile'
 import { LayOut } from './components/LayOut/LayOut'
 
 function App() {
-  useEffect(() => {
-    axios.defaults.withCredentials = true
-    const getCsrfToken = async () => {
-      const { data } = await axios.get<CsrfToken>(
-        `${process.env.REACT_APP_API_URL}/csrf`
-      )
-      //API経由で取得したcsrf_tokenをX-CSRF-TOKENへ設定する
-      axios.defaults.headers.common['X-CSRF-Token'] = data.csrf_token
-    }
-    getCsrfToken()
-  }, [])
+  // useEffect(() => {
+  axios.defaults.withCredentials = true
+  //   const getCsrfToken = async () => {
+  //     const { data } = await axios.get<CsrfToken>(
+  //       `${process.env.REACT_APP_API_URL}/csrf`
+  //     )
+  //     //API経由で取得したcsrf_tokenをX-CSRF-TOKENへ設定する
+  //     axios.defaults.headers.common['X-CSRF-Token'] = data.csrf_token
+  //   }
+  //   getCsrfToken()
+  // }, [])
 
   return (
     <BrowserRouter>

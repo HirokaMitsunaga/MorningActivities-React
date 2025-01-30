@@ -11,7 +11,7 @@ export const useMutateTask = (selectedDate: string) => {
 
   const createTaskMutation = useMutation(
     (task: Omit<Task, 'id' | 'created_at' | 'updated_at'>) =>
-      axios.post<Task>(`${process.env.REACT_APP_API_URL}/tasks`, task),
+      axios.post<Task>(`${process.env.REACT_APP_API_URL}/task`, task),
     {
       onSuccess: (res) => {
         const previousTasks = queryClient.getQueryData<Task[]>([
@@ -40,7 +40,7 @@ export const useMutateTask = (selectedDate: string) => {
   const updateTaskMutation = useMutation(
     (task: Omit<Task, 'created_at' | 'updated_at'>) =>
       //データとしてtaskのタイトルを渡す
-      axios.put<Task>(`${process.env.REACT_APP_API_URL}/tasks/${task.id}`, {
+      axios.put<Task>(`${process.env.REACT_APP_API_URL}/task/${task.id}`, {
         title: task.title,
         scheduled_minutes: task.scheduled_minutes,
         actual_minutes: task.actual_minutes,
@@ -74,8 +74,7 @@ export const useMutateTask = (selectedDate: string) => {
     }
   )
   const deleteTaskMutation = useMutation(
-    (id: number) =>
-      axios.delete(`${process.env.REACT_APP_API_URL}/tasks/${id}`),
+    (id: number) => axios.delete(`${process.env.REACT_APP_API_URL}/task/${id}`),
     {
       onSuccess: (_, variables) => {
         const previousTasks = queryClient.getQueryData<Task[]>([

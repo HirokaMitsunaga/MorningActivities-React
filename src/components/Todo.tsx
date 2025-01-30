@@ -29,6 +29,7 @@ export const Todo = () => {
     <>
       <div className="flex justify-center items-center flex-col min-h-screen text-gray-600 font-mono">
         <button
+          aria-label="タスクを作成"
           className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition-colors"
           onClick={() => setTaskModalOpen(true)}
         >
