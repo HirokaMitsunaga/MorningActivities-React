@@ -7,7 +7,7 @@ export const useQueryTasks = (selectedDate: string) => {
   const { switchErrorHandling } = useError()
   const getTasks = async () => {
     const { data } = await axios.get<Task[]>(
-      `${process.env.REACT_APP_API_URL}/tasks`,
+      `${process.env.REACT_APP_API_URL}/task`,
       { withCredentials: true }
     )
     // タスクのcreated_atと選択された日付が一致するものだけをフィルタリング

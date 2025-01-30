@@ -69,12 +69,14 @@ export const TaskModal = ({
           />
           <div className="flex justify-between">
             <button
+              aria-label="タスクを保存"
               type="submit"
               className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             >
               {editedTask.id === 0 ? '登録' : '更新'}
             </button>
             <button
+              aria-label="モーダルを閉じる"
               className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
               onClick={() => {
                 onClose()

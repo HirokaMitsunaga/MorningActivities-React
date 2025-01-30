@@ -24,7 +24,10 @@ const TaskItemMemo: FC<Omit<Task, 'created_at' | 'updated_at'>> = ({
   return (
     <>
       <div className="p-4 bg-white shadow rounded-lg">
-        <li className="border-b border-gray-200 flex justify-between items-center py-3">
+        <li
+          aria-label={`${id}`}
+          className="border-b border-gray-200 flex justify-between items-center py-3"
+        >
           <div>
             <span className="font-bold text-lg">{title}</span>
             <div className="text-sm text-gray-500 mb-1">
@@ -48,6 +51,7 @@ const TaskItemMemo: FC<Omit<Task, 'created_at' | 'updated_at'>> = ({
           </div>
           <div className="flex items-center">
             <PencilIcon
+              aria-label="タスクを更新"
               className="h-5 w-5 mx-1 text-blue-500 cursor-pointer"
               onClick={openModal} // クリックイベントを変更
             />
@@ -56,6 +60,7 @@ const TaskItemMemo: FC<Omit<Task, 'created_at' | 'updated_at'>> = ({
               onClose={() => setModalOpen(false)}
             />
             <TrashIcon
+              aria-label="タスクを削除"
               className="h-5 w-5 text-blue-500 cursor-pointer"
               onClick={() => deleteTaskMutation.mutate(id)}
             />

@@ -5,6 +5,7 @@ import { useMutateAuth } from '../hooks/useMutateAuth'
 export const Auth = () => {
   const [email, setEmail] = useState('')
   const [pw, setPw] = useState('')
+  const [name, setName] = useState('')
   const [isLogin, setIsLogin] = useState(true)
   const { loginMutation, registerMutation } = useMutateAuth()
 
@@ -14,6 +15,7 @@ export const Auth = () => {
       loginMutation.mutate({
         email: email,
         password: pw,
+        name: name,
       })
     } else {
       //ログインしていない場合サインアップさせる
@@ -21,12 +23,14 @@ export const Auth = () => {
         .mutateAsync({
           email: email,
           password: pw,
+          name: name,
         })
         //サインアップ完了後自動的にログインできるようにしておく
         .then(() =>
           loginMutation.mutate({
             email: email,
             password: pw,
+            name: name,
           })
         )
     }
@@ -60,6 +64,16 @@ export const Auth = () => {
             value={pw}
           />
         </div>
+        <div>
+          <input
+            className="mb-3 px-3 text-sm py-2 border border-gray-300"
+            name="name"
+            type="name"
+            placeholder="Name"
+            onChange={(e) => setName(e.target.value)}
+            value={name}
+          />
+        </div>
         <div className="flex justify-center my-2">
           <button
             className="disabled:opacity-40 py-2 px-4 rounded text-white bg-indigo-600"
@@ -71,6 +85,7 @@ export const Auth = () => {
         </div>
       </form>
       <ArrowPathIcon
+        data-testid="mode-switch"
         onClick={() => setIsLogin(!isLogin)}
         className="h-6 w-6 my-2 text-blue-500 cursor-pointer"
       />
